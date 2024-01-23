@@ -6,25 +6,18 @@
   font-family: Poppins, system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  scroll-behavior: smooth;
 
   color-scheme: light dark;
-  background-color: #ffffff;
+  background-color: #f7f7f7;
  color: #242424;
  --primary: #0571C3;
-    --second-primary: #489ddd;
-    --accent: #02254A;
+    --second-primary: #DEDCFF;
+    --accent: #433BFF;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #213547;
-    color: #ffffff;
-   
-  }
+  -moz-osx-font-smoothing: grayscale; 
 }
 
 h1{
@@ -53,6 +46,7 @@ nav{
   width: 100%;
   transition: 1s all; 
   z-index: 1000;
+  background-color: white;
 }
 
 .nav-link{
@@ -76,9 +70,9 @@ nav{
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 70vh;
+  height: 100vh;
   width: 100%;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   background-attachment: fixed;
   background-position: bottom;
 
@@ -102,4 +96,14 @@ nav{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+}
+
+.fixedNav{
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 1px 1px 5px #02254A;
+  transition: all 2s;
+  background-color: white;
 }

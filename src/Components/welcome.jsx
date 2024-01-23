@@ -3,7 +3,7 @@ import img from "../assets/supernatural2024.jpeg";
 export default function Welcome(){
     return (
       <>
-        <section>
+        <section id="about">
           <div className="flex flex-col md:flex-row">
             <div className="w-full max-w-[550px]">
               <h1 className="font-semibold text-[3rem]">

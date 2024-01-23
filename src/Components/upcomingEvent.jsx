@@ -37,13 +37,21 @@ export default function UpcomingEvents() {
     );
   })
     return (
-      <section>
-        <h1 className="text-[1.5] md:text-[3.2rem]">Upcoming Programs</h1>
-        {eventData ? (
+      <section id="event">
+        <div className="my-8 flex flex-col gap-3">
+        <h1 className="text-[1.7] md:text-[3.2rem]">Upcoming Programs</h1>
+          <p className="max-w-[550px] translate-x-0 lg:translate-x-10">
+            We are a Bible believing Church where the Holy Bible is the sole
+            written authority in matters pertaining to faith and practice as
+            well as the supreme and sufficient rule of conduct. Grow more with
+            our events.
+          </p>
+        </div>
+        {eventData.length ? (
           <div className="auto-grid">{mappedEventData}</div>
         ) : (
           <div className="flex items-center justify-center">
-            <div className="rounded-full w-[100px] h-[100px] animate-spin border-y-4 border-blue-400"></div>
+            <p className="animate-spin text-[40px] border-y-4 border-blue-600 w-[100px] h-[100px] rounded-full font-semibold"></p>
           </div>
         )}
       </section>

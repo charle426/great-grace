@@ -18,7 +18,7 @@ export default function Prayer(){
         <section>
             <div className="flex justify-end w-full">
                 <div className="flex flex-col gap-3 items-center max-w-[400px] justify-end my-6 ">
-                <h1 className="font-semibold text-[25px] ">Prayer for the Day</h1>
+                <h1 className="font-semibold text-[25px] ">Our prayer for you today</h1>
                 {prayer.length ? (
                     <div className="flex w-full flex-col prayer-div p-3">
                     <p className="font-semibold text-[20px]">{prayer[0].text}</p>
