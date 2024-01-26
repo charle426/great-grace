@@ -195,7 +195,7 @@ export default function Admin() {
   }
 
   return (
-    <section>
+    <section className="mt-20">
       <form onSubmit={handlePrayerSubmit} className="flex flex-col gap-[20px]">
         <textarea
           cols="30"

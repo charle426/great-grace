@@ -73,10 +73,10 @@ export default function Navbar({ activeNav }) {
             </label>
           </div>
           <div className="nav-link-div h-0 w-0 absolute md:top-0 top-[70px] left-0 overflow-hidden md:h-auto md:relative md:w-full duration-1000 ">
-            <ul className="list-none flex text-black gap-3 md:pl-10 pt-5 md:flex-row flex-col justify-end px-3">
-              <a href="#" className="nav- hover:text-[#489ddd]" id="home">
+            <ul className="list-none flex text- md:text-white gap-3 md:pl-10 pt-5 md:flex-row flex-col justify-end px-3">
+              <Link to="/" className="nav- hover:text-[#489ddd]" id="home">
                 <li>Home</li>
-              </a>
+              </Link>
               <a
                 href="#about"
                 className="nav-lin hover:text-[#489ddd]"
