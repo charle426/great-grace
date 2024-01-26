@@ -28,7 +28,7 @@ export default function Admin() {
   useEffect(() => {
     function getEvents() {
       axios
-        .get("http://localhost:4000/event")
+        .get("http://127.0.0.1:4000/event")
         .then((res) => {
           return setEventData(res.data.message);
         })
@@ -81,7 +81,7 @@ export default function Admin() {
 
    function deleteAndReset(e) {
      const deleteId = e.currentTarget.id;
-     axios.delete(`http://localhost:4000/delete/${deleteId}`);
+     axios.delete(`http://127.0.0.1:4000/delete/${deleteId}`);
      setPopUp(false);
      setTimeout(() => {
        window.location.reload();
@@ -146,7 +146,7 @@ export default function Admin() {
     const prayerBody = { text, author };
 
     axios
-      .put("http://localhost:4000/edit/prayer", prayerBody)
+      .put("http://127.0.0.1:4000/edit/prayer", prayerBody)
       .then(() =>
         setPrayer({
           text: "",
@@ -180,7 +180,7 @@ export default function Admin() {
     formData.append("time", time);
     formData.append("speaker", speaker);
     axios
-      .post("http://localhost:4000/event", formData)
+      .post("http://127.0.0.1:4000/event", formData)
       .then(() => console.log("Event Posted"))
       .catch((err) => console.log(err));
 

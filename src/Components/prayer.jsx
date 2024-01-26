@@ -5,10 +5,12 @@ export default function Prayer(){
 
     React.useEffect(() => {
         function fetchFunction() {
-            axios.get("http://localhost:4000/prayer")
-                .then((res) => {
-               return setPrayer(res.data.message)
-            }).catch(err => console.log(err))
+            axios
+              .get("http://127.0.0.1:4000/prayer")
+              .then((res) => {
+                return setPrayer(res.data.message);
+              })
+              .catch((err) => console.log(err));
             
             
         }
