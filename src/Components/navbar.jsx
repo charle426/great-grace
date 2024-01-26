@@ -91,9 +91,9 @@ export default function Navbar({ activeNav }) {
               >
                 <li>Events</li>
               </a>
-              {/* <Link to="giving" className="nav-link" id="giving">
+              <Link to="/ggm/ministries/admins/2424" className="nav-link" id="giving">
                 <li>Giving</li>
-              </Link> */}
+              </Link>
             </ul>
           </div>
         </div>

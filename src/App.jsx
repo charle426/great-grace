@@ -20,11 +20,10 @@ export default function App() {
             element={<Homepage setActiveNav={setActive} />}
             errorElement={<Errorpage />}
           />
-          <Route path="about-us" element={<About setActiveNav={setActive} />} />
-          <Route path="/ggm/ministries/admins/2424" element={<Admin />} />
+          <Route exact path="/ggm/ministries/admins/2424" element={<Admin />} />
         </Routes>
         <Footer />
       </Router>
     </>
-  );
+  )
 }
