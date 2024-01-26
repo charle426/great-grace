@@ -15,13 +15,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-main().catch((err) => console.log("this is the error: " + err));
+// main().catch((err) => console.log("this is the error: " + err));
 
-async function main() {
-  await mongoose.connect(
-    "mongodb+srv://charlesakachi476:JxjFpqW8kbhQ3QMY@cluster0.peyi6fq.mongodb.net/"
-  );
+// async function main() {
+//   await mongoose.connect(
+//     "mongodb+srv://charlesakachi476:JxjFpqW8kbhQ3QMY@cluster0.peyi6fq.mongodb.net/"
+//   );
+// }
+
+const uri =
+  "mongodb+srv://charlesakachi476:JxjFpqW8kbhQ3QM@cluster0.peyi6fq.mongodb.net/?retryWrites=true&w=majority";
+const clientOptions = {
+  serverApi: { version: "1", strict: true, deprecationErrors: true },
+};
+async function run() {
+  try {
+    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+    await mongoose.connect(uri, clientOptions);
+    await mongoose.connection.db.admin().command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await mongoose.disconnect();
+  }
 }
+run().catch(console.dir);
+
 const eventSchema = mongoose.Schema({
   name: String,
   date: String,
@@ -47,16 +68,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.get("/adminData", (req, res) => {
-//   Blog.find({})
-//     .then((blogPosts) => {
-//       res.json({
-//         message: blogPosts,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// });
-
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     return callback(null, "./public/uploads");
@@ -70,11 +81,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// app.post("/upload", upload.single("file"), (req, res) => {
-//    console.log(req.file.filename);
-//    console.log(req.body);
-// })
 
 app.post("/event", upload.single("file"), (req, res) => {
   const { name, date, time, speaker } = req.body;

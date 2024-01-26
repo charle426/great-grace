@@ -17,25 +17,32 @@ export default function UpcomingEvents() {
     }
     getEvents();
   }, []);
-
-    const mappedEventData = eventData.map((items) => {
-    
-    return (
-      <div key={items._id} className="rounded-[20px] bg-blue-100 max-w-[300px] overflow-hidden">
-        <div>
-          <img src={`http://localhost:4000/uploads/${items.file}`} alt="event img" />
+    const slicedEventData = eventData.slice(0, 3)
+    const mappedEventData = slicedEventData.map((items) => {
+      return (
+        <div
+          key={items._id}
+          className="rounded-[20px] bg-blue-100 max-w-[300px] overflow-hidden"
+        >
+          <div>
+            <img
+              src={`http://localhost:4000/uploads/${items.file}`}
+              alt="event img"
+            />
+          </div>
+          <div className="p-3">
+            <h3 className="font-semibold text-center text-[25px]">
+              {items.name}
+            </h3>
+            <ul className="flex flex-col gap-2 items-start list-disc list-inside">
+              <li className="marker:text-blue-700">Speaker: {items.speaker}</li>
+              <li className="marker:text-blue-700">Date: {items.date}</li>
+              <li className="marker:text-blue-700">Time: {items.time}</li>
+            </ul>
+          </div>
         </div>
-        <div className="p-3">
-          <h3 className="font-semibold text-center text-[25px]">{ items.name }</h3>
-          <ul className="flex flex-col gap-2 items-start list-disc list-inside">
-            <li className="marker:text-blue-700">Speaker: { items.speaker }</li>
-            <li className="marker:text-blue-700">Date: { items.date }</li>
-            <li className="marker:text-blue-700">Time: { items.time }</li>
-          </ul>
-        </div>
-      </div>
-    );
-  })
+      );
+    });
     return (
       <section id="event">
         <div className="my-8 flex flex-col gap-3">
