@@ -275,7 +275,7 @@ export default function Admin() {
         {postBtn ? (
           <button
             type="disable"
-            className="bg-blue-400 flex items-center opacity-70 gap-2 p-3 pointer-events-none select-none mt-3 rounded-[10px]"
+            className="bg-blue-400 flex items-center opacity-70 gap-2 p-3 cursor-progress pointer-events-none select-none mt-3 rounded-[10px]"
           >
             <FontAwesomeIcon
               className="text-white"
@@ -285,7 +285,7 @@ export default function Admin() {
             Post
           </button>
         ) : (
-          <button type="submit" className="bg-blue-400 p-3 mt-3 rounded-[10px]">
+          <button type="submit" className="bg-blue-400 p-3 cursor-pointer mt-3 rounded-[10px]">
             post
           </button>
         )}
