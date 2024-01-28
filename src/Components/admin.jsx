@@ -1,9 +1,14 @@
-import { useState, useEffect } from "react"
-import axios from "axios"
+import { useState, useEffect, Suspense } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStarAndCrescent } from "@fortawesome/free-solid-svg-icons"
 import { faHourglassHalf } from "@fortawesome/free-regular-svg-icons"
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { db, storage } from "../firebaseConfig"
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage"
+import { v4 } from "uuid";
 export default function Admin() {
+  const eventCollection = collection(db, "events")
+  const prayerCollection = collection(db, "prayer")
   const [event, setEvent] = useState({
     name: "",
     date: "",
@@ -11,7 +16,7 @@ export default function Admin() {
     speaker: "",
   });
 
-  const [eventFile, setEventFile] = useState("");
+   const [imgUrl, setImgUrl] = useState("");
   const [eventData, setEventData] = useState([]);
   const [deleteBtn, setDeleteBtn] = useState({
     name: "",
@@ -22,30 +27,41 @@ export default function Admin() {
   const [prayer, setPrayer] = useState({
     text: "",
     author: "",
+    id: "",
   });
 
   // fetching event data and displaying them
   useEffect(() => {
-    function getEvents() {
-      axios
-        .get("http://127.0.0.1:4000/event")
-        .then((res) => {
-          return setEventData(res.data.message);
-        })
-        .catch((err) => console.log(err));
+    async function getEvents() {
+      const data = await getDocs(eventCollection)
+      setEventData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})))
     }
-    getEvents();
-  }, []);
 
+    async function getPrayer() {
+      const data = await getDocs(prayerCollection)
+
+      const prayData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      prayData.map((data) => {
+         setPrayer({
+        text: data.text,
+           author: data.author,
+        id: data.id
+      });
+      })  
+    }
+
+    getEvents();
+    getPrayer()
+  }, []);
   const mappedEventData = eventData.map((items) => {
     return (
       <div
-        key={items._id}
+        key={items.id}
         className="rounded-[20px] bg-blue-100 max-w-[300px] overflow-hidden"
       >
         <div>
           <img
-            src={`http://localhost:4000/uploads/${items.file}`}
+            src={items.imgUrl}
             alt="event img"
           />
         </div>
@@ -60,8 +76,8 @@ export default function Admin() {
           </ul>
         <div
           className="bg-red-500 px-3 mx-auto w-[100px] flex items-center justify-center rounded-[3px] font-medium text-[18px] mt-3 pb-[2px] cursor-pointer"
-          id={items._id}
-          onClick={() => doBoth(items.name, items._id)}
+          id={items.id}
+          onClick={() => doBoth(items.name, items.id)}
         >
           Delete
         </div>
@@ -79,9 +95,11 @@ export default function Admin() {
      return setPopUp(true);
    }
 
-   function deleteAndReset(e) {
+  async function deleteAndReset(e) {
      const deleteId = e.currentTarget.id;
-     axios.delete(`http://127.0.0.1:4000/delete/${deleteId}`);
+
+    await deleteDoc(doc(db, "events", deleteId));
+    
      setPopUp(false);
      setTimeout(() => {
        window.location.reload();
@@ -138,22 +156,16 @@ export default function Admin() {
     });
   }
 
-  function handlePrayerSubmit(e) {
+ async function handlePrayerSubmit(e) {
     e.preventDefault();
     const { text, author } = prayer;
     if (!text || !author) return alert("fill prayer form well");
 
     const prayerBody = { text, author };
+   const prayerRef = doc(db, "prayer", prayer.id)
 
-    axios
-      .put("http://127.0.0.1:4000/edit/prayer", prayerBody)
-      .then(() =>
-        setPrayer({
-          text: "",
-          author: "",
-        })
-      )
-      .catch((err) => console.log(err));
+    await updateDoc(prayerRef, prayerBody)
+   .then(() => alert("Posted Successfully"))
   }
 
   function handleEventChange(e) {
@@ -167,31 +179,39 @@ export default function Admin() {
     });
   }
 
-  function handleEventSubmit(e) {
+  function handleFileChange(e) {
+      const imgRef = ref(storage, `/images/file${v4()}`);
+      uploadBytes(imgRef, e.target.files[0])
+        .then((data) => {
+          getDownloadURL(data.ref).then((url) => setImgUrl(url));
+        })
+        .catch((err) => console.log(err));
+  }
+  
+ async function handleEventSubmit(e) {
     e.preventDefault();
-    const { name, date, time, speaker } = event;
-    if (!eventFile || !name || !date || !time || !speaker)
-      alert("fill Event form well");
+   const { name, date, time, speaker } = event;
+   if(!name || ! date || !time || !speaker || !imgUrl) return alert("Fill the form properly")
+   setPostBtn(true);
+   const formData = {
+     name,
+     date,
+     time,
+     speaker,
+     imgUrl,
+  }
+   await addDoc(eventCollection, formData)
 
-    const formData = new FormData();
-    formData.append("file", eventFile);
-    formData.append("name", name);
-    formData.append("date", date);
-    formData.append("time", time);
-    formData.append("speaker", speaker);
-    axios
-      .post("http://127.0.0.1:4000/event", formData)
-      .then(() => console.log("Event Posted"))
-      .catch((err) => console.log(err));
-
-    setPostBtn(true);
     setEvent({
-      text: "",
-      author: "",
+      name: "",
+      date: "",
+      time: "",
+      speaker: "",
     });
     setTimeout(() => {
       setPostBtn(false);
-    }, 5000);
+      window.location.reload()
+    }, 8000);
   }
 
   return (
@@ -249,9 +269,9 @@ export default function Admin() {
             <input
               type="file"
               name="file"
-              // value={event.file}
+              accept="image/*"
               placeholder="Event Image"
-              onChange={(e) => setEventFile(e.target.files[0])}
+              onChange={handleFileChange}
               className="w-full bg-blue-100 rounded-[20px] p-3"
             />
             <input
@@ -285,7 +305,10 @@ export default function Admin() {
             Post
           </button>
         ) : (
-          <button type="submit" className="bg-blue-400 p-3 cursor-pointer mt-3 rounded-[10px]">
+          <button
+            type="submit"
+            className="bg-blue-400 p-3 cursor-pointer mt-3 rounded-[10px]"
+          >
             post
           </button>
         )}
@@ -293,7 +316,21 @@ export default function Admin() {
 
       <div className="mt-9">
         <h1 className="text-[1.5rem] md:text-[3rem] mb-3"> Active Event </h1>
-        <div className="auto-grid">{mappedEventData}</div>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center">
+              <p className="animate-spin text-[40px] border-y-4 border-blue-600 w-[100px] h-[100px] rounded-full font-semibold"></p>
+            </div>
+          }
+        >
+          {eventData.length ? (
+            <div className="auto-grid">{mappedEventData}</div>
+          ) : (
+            <div className="flex items-center justify-center">
+              <p>No Programs right ow</p>
+            </div>
+          )}
+        </Suspense>
       </div>
       {popUp && <DeleteBlog />}
     </section>
