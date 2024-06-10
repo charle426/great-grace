@@ -20,7 +20,7 @@ const eventCollection = collection(db, "events");
     return (
       <div key={items.id} className="rounded-[20px] bg-blue-100 max-w-[300px] overflow-hidden">
         <div>
-          <img src={items.imgUrl} alt="event img" />
+          <img src={items.imgUrl} alt="event img" className="object-cover" />
         </div>
         <div className="p-3">
           <h3 className="font-semibold text-center text-[25px]">{ items.name }</h3>
@@ -52,7 +52,7 @@ const eventCollection = collection(db, "events");
           }
         >
            {eventData.length ? (
-          <div className="auto-grid">{mappedEventData}</div>
+          <div className="auto-grid flex-grow-0">{mappedEventData}</div>
         ) : (
           <div className="flex items-center justify-center">
             <p>No Programs right ow</p>
