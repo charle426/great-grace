@@ -86,7 +86,7 @@ nav{
 }
 
 .prayer-div{
-  clip-path: polygon(0 0, 100% 0%, 100% 75%, 75% 75%, 82% 100%, 45% 75%, 0% 75%);
+  /* clip-path: polygon(0 0, 100% 0%, 100% 75%, 75% 75%, 82% 100%, 45% 75%, 0% 75%); */
   background: #c0c0ffd2;
   min-height: 300px;
   border-radius: 20px;

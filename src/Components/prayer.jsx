@@ -21,7 +21,7 @@ export default function Prayer(){
                            <Suspense key={items.id} fallback={<p className="animate-spin text-[40px] border-y-4 border-blue-600 w-[100px] h-[100px] rounded-full font-semibold"></p>}> 
                                 <div>
                                 <div className="flex w-full flex-col prayer-div p-3">
-                                    <p className="font-semibold text-[20px]">
+                                    <p className="font-semibold text-[.9rem]">
                                     {items.text}
                                     </p>
                                     <p className="text-[16px] flex justify-end">
